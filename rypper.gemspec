@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'rypper'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.summary = 'Rypper'
   s.description = 'Rypper'
   s.author = 'Michael Nowak'

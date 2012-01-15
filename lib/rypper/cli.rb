@@ -43,10 +43,13 @@ module Rypper
         puts " * #{html_uri} ..."
         html = Rypper::Loader.get(html_uri)
         if html.is_a?(String)
-          extractor.extract!(html).each do |image_uri|
+          extractor.extract!(html_uri, html).each do |image_uri|
             if image_uri.is_a?(String)
-              print "   * #{image_uri} ..."
               image_path = uri.to_path(File.extname(image_uri))
+              if opts.has_key?(:output)
+                image_path = File.join(opts[:output], image_path)
+              end
+              print "   * #{image_uri} --> #{image_path} ..."
               if !File.exists?(image_path) || opts.has_key?(:overwrite)
                 Rypper::Loader.mkdir!(File.dirname(image_path))
                 image_file = File.open(image_path, 'w')

@@ -1,1 +1,6 @@
-Usage: ruby rypper.rb <uri> <selector>
+Usage: rypper <uri> <selector>
+
+Options:
+    --help, -h          display help
+    --output, -o        output directory
+    --overwrite, -w     overwrite existing files
