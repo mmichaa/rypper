@@ -13,11 +13,11 @@ module Rypper
       File.directory?(path)
     end
 
-    def self.get(uri)
+    def self.get(uri, header={}, options={})
       unless uri.kind_of?(URI)
         uri = ::URI.parse(uri.to_s)
       end
-      client = Net::HTTPClient.from_storage(uri.host)
+      client = Net::HTTPClient.from_storage(uri.host, header, options)
       response = client.get(uri)
       if response.code.to_i == 200
         response.body

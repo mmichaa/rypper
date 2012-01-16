@@ -6,6 +6,7 @@ module Rypper
       ['--help', '-h', GetoptLong::NO_ARGUMENT],
       ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
       ['--overwrite', '-w', GetoptLong::NO_ARGUMENT],
+      ['--referer', '-r', GetoptLong::REQUIRED_ARGUMENT]
     ]
 
     def self.getopt()
@@ -15,6 +16,8 @@ module Rypper
         opt_type = OPTS.find {|e| e.first == opt}.last
         if opt_type == GetoptLong::NO_ARGUMENT
           opts[opt_sym] = true
+        elsif GetoptLong::OPTIONAL_ARGUMENT
+          opts[opt_sym] = arg.empty? ? true : arg
         else
           opts[opt_sym] = arg
         end
@@ -36,12 +39,18 @@ module Rypper
       extractor = nil
       extractor = Rypper::Extractor.new(argv[1]) # '#image'
       counter = uri.counter[uri.order.last]
-    
+
+      loader_header = {}
+      loader_options = {}
+      if opts[:referer]
+        loader_header['Referer'] = opts[:referer]
+      end
+
       puts "Processing #{uri.uri} ..."
       while true
         html_uri = uri.to_uri
         puts " * #{html_uri} ..."
-        html = Rypper::Loader.get(html_uri)
+        html = Rypper::Loader.get(html_uri, loader_header.dup, loader_options.dup)
         if html.is_a?(String)
           extractor.extract!(html_uri, html).each do |image_uri|
             if image_uri.is_a?(String)
@@ -54,7 +63,7 @@ module Rypper
                 Rypper::Loader.mkdir!(File.dirname(image_path))
                 image_file = File.open(image_path, 'w')
                 image_file.binmode
-                image_file.write(Rypper::Loader.get(image_uri))
+                image_file.write(Rypper::Loader.get(image_uri, loader_header.merge({'Referer' => html_uri.to_s}), loader_options.dup))
                 image_file.close
                 puts ' OK'
               else

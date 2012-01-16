@@ -66,6 +66,20 @@ module Rypper
       self.counter.values.all?(&:last?)
     end
 
+    def state
+      state = {}
+      self.counter.each do |name, counter|
+        state[name] = counter.state
+      end
+      state
+    end
+
+    def state=(state)
+      state.each do |name, state|
+        self.counter[name] = state
+      end
+    end
+
     def to_s
       s = self.uri.dup
       self.counter.each do |name, counter|
