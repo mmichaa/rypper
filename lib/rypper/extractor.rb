@@ -53,7 +53,7 @@ module Rypper
         else
           elem
         end
-      end
+      end if res.is_a?(Array)
       res
     end
   end

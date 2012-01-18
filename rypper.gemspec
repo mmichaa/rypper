@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'rypper'
-  s.version = '0.0.2'
+  s.version = '0.0.3'
   s.summary = 'Rypper'
   s.description = 'Rypper'
   s.author = 'Michael Nowak'
@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.default_executable = 'rypper'
   s.require_path = 'lib'
   s.required_ruby_version = '>= 1.8.7'
-  s.add_dependency 'nokogiri', '~> 1.5'
+  s.add_dependency 'nokogiri', '~> 1.5.0'
+  s.add_dependency 'selenium-webdriver', '~> 2.17.0'
   s.has_rdoc = false
   s.rdoc_options = ['--charset=UTF-8']
 end

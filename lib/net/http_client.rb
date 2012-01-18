@@ -19,6 +19,14 @@ module Net
         end
         return connection
       end
+
+      def uri_path_with_query(uri)
+        if uri.query.nil? || uri.query == ''
+          uri.path
+        else
+          uri.path + '?' + uri.query
+        end
+      end
     end
 
     attr_reader :host, :port, :timeout
@@ -41,22 +49,23 @@ module Net
     end
 
     def get(path, header={}, options={})
-      uri = path.is_a?(URI) ? path : self.to_uri(path)
+      uri = path.is_a?(::URI) ? path : self.to_uri(path)
       header['Accept'] ||= '*/*'
       header['Connection'] ||= (self.keep_alive? ? 'Keep-Alive' : 'Close')
       header['Referer'] = uri.to_s if options[:referer_self]
       header['User-Agent'] ||= self.user_agent
       @http.start unless @http.started?
       response = nil
+      path_with_query = self.class.uri_path_with_query(uri)
       begin
-        response = @http.request_get(uri.path, header)
+        response = @http.request_get(path_with_query, header)
       rescue EOFError
         @http = Net::HTTP.new(self.host, self.port)
         @http.start
-        response = @http.request_get(uri.path, header)
+        response = @http.request_get(path_with_query, header)
       end
       if response.is_a?(Net::HTTPRedirection) && options[:follow_redirects]
-        uri_redirect = URI.parse(response['Location'])
+        uri_redirect = ::URI.parse(response['Location'])
         header_redirect = options[:follow_with_header] ? header : options[:follow_header] || {}
         options_redirect = options[:follow_with_options] ? options : options[:follow_options] || {}
         options_redirect['Referer'] ||= uri.to_s 
@@ -66,8 +75,11 @@ module Net
       return response
     end
 
-    def to_uri(path=nil)
-      return URI::HTTP.build({:host => self.host, :port => self.port, :path => path})
+    def to_uri(path=nil, query=nil)
+      if path.include('?') && query.nil?
+        path, query = path.split('?', 2)
+      end
+      return ::URI::HTTP.build({:host => self.host, :port => self.port, :path => path, :query => query})
     end
   end
 end

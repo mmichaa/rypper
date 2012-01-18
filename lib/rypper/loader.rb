@@ -17,8 +17,8 @@ module Rypper
       unless uri.kind_of?(URI)
         uri = ::URI.parse(uri.to_s)
       end
-      client = Net::HTTPClient.from_storage(uri.host, header, options)
-      response = client.get(uri)
+      client = Net::HTTPClient.from_storage(uri.host)
+      response = client.get(uri, header, options)
       if response.code.to_i == 200
         response.body
       else

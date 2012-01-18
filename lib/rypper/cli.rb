@@ -6,7 +6,8 @@ module Rypper
       ['--help', '-h', GetoptLong::NO_ARGUMENT],
       ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
       ['--overwrite', '-w', GetoptLong::NO_ARGUMENT],
-      ['--referer', '-r', GetoptLong::REQUIRED_ARGUMENT]
+      ['--referer', '-r', GetoptLong::REQUIRED_ARGUMENT],
+      ['--selenium', '-s', GetoptLong::NO_ARGUMENT],
     ]
 
     def self.getopt()
@@ -32,6 +33,13 @@ module Rypper
         puts "USAGE: ruby #{$0} <uri> <selector>"
         exit 1
       end
+
+      selenium = nil
+      if opts[:selenium]
+        selenium = Rypper::Selenium.new
+        selenium.browser
+      end
+
       uri = Rypper::URI.new(argv[0]) # 'http://www.mangafox.com/manga/history_s_strongest_disciple_kenichi/v[01-45:vol]/c[001-459:chap]/[1-99:pic].html'
       uri.parse!
       uri.first!
@@ -50,9 +58,16 @@ module Rypper
       while true
         html_uri = uri.to_uri
         puts " * #{html_uri} ..."
-        html = Rypper::Loader.get(html_uri, loader_header.dup, loader_options.dup)
+        html = nil
+        if selenium
+          selenium.visit(html_uri.to_s)
+          html = selenium.body
+        else
+          html = Rypper::Loader.get(html_uri, loader_header.dup, loader_options.dup)
+        end
         if html.is_a?(String)
-          extractor.extract!(html_uri, html).each do |image_uri|
+          image_uris = extractor.extract!(html_uri, html)
+          image_uris.each do |image_uri|
             if image_uri.is_a?(String)
               image_path = uri.to_path(File.extname(image_uri))
               if opts.has_key?(:output)
@@ -72,6 +87,10 @@ module Rypper
             else
               puts ' * Imageless'
             end
+          end
+          if image_uris.empty?
+            puts ' * Imageless: Skipping'
+            counter.last!
           end
         else
           counter.last!
