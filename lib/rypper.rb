@@ -8,6 +8,7 @@ require 'uri'
 require 'rubygems'
 require 'nokogiri'
 require 'selenium-webdriver'
+require 'harmony'
 
 require 'rypper/cli'
 require 'rypper/counter'

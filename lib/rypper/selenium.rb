@@ -49,10 +49,7 @@ module Rypper
     def source
       browser.page_source
     end
-  
-    def body
-      browser.page_source
-    end
+    alias :body :source
   
     def current_url
       browser.current_url

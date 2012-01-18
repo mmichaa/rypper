@@ -5,3 +5,5 @@ Options:
     --output, -o        output directory
     --overwrite, -w     overwrite existing files
     --referer		http referer for html request
+    --selenium		uses your firefox web-browser for html-pages
+    --harmony		uses harmony-gem (envjs + johnson) for html-pages

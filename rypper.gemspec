@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.7'
   s.add_dependency 'nokogiri', '~> 1.5.0'
   s.add_dependency 'selenium-webdriver', '~> 2.17.0'
+  s.add_dependency 'harmony', '~> 0.5.6'
   s.has_rdoc = false
   s.rdoc_options = ['--charset=UTF-8']
 end

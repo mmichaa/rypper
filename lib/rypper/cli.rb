@@ -3,6 +3,7 @@
 module Rypper
   class CLI
     OPTS = [
+      ['--harmony', '-j', GetoptLong::NO_ARGUMENT],
       ['--help', '-h', GetoptLong::NO_ARGUMENT],
       ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
       ['--overwrite', '-w', GetoptLong::NO_ARGUMENT],
