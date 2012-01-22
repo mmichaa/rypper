@@ -42,8 +42,8 @@ module Rypper
       @options = DEFAULT_OPTIONS.merge(options)
     end
   
-    def visit(path)
-      browser.navigate.to(path.to_s)
+    def visit(uri)
+      browser.navigate.to(uri.to_s)
     end
   
     def source

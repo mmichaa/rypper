@@ -1,9 +1,10 @@
 Usage: rypper <uri> <selector>
 
 Options:
-    --help, -h          display help
-    --output, -o        output directory
-    --overwrite, -w     overwrite existing files
-    --referer		http referer for html request
-    --selenium		uses your firefox web-browser for html-pages
-    --harmony		uses harmony-gem (envjs + johnson) for html-pages
+    --akephalos, -a   uses akephalos-gem (HtmlUnit) for html-pages
+    --harmony, -j     uses harmony-gem (envjs + johnson) for html-pages
+    --help, -h        display help
+    --output, -o      output directory
+    --overwrite, -w   overwrite existing files
+    --referer, -r     http referer for html request
+    --selenium, -s    uses your firefox web-browser for html-pages

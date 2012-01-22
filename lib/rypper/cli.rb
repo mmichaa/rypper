@@ -3,6 +3,7 @@
 module Rypper
   class CLI
     OPTS = [
+      ['--akephalos', '-a', GetoptLong::NO_ARGUMENT],
       ['--harmony', '-j', GetoptLong::NO_ARGUMENT],
       ['--help', '-h', GetoptLong::NO_ARGUMENT],
       ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
@@ -31,8 +32,14 @@ module Rypper
       opts = self.getopt()
       argv = ARGV
       if argv.count != 2
-        puts "USAGE: ruby #{$0} <uri> <selector>"
+        puts "USAGE: rypper <uri> <selector>"
         exit 1
+      end
+
+      akephalos = nil
+      if opts[:akephalos]
+        akephalos = Rypper::Akephalos.new
+        akephalos.browser
       end
 
       selenium = nil
@@ -60,7 +67,10 @@ module Rypper
         html_uri = uri.to_uri
         puts " * #{html_uri} ..."
         html = nil
-        if selenium
+        if akephalos
+          akephalos.visit(html_uri.to_s)
+          html = akephalos.body
+        elsif selenium
           selenium.visit(html_uri.to_s)
           html = selenium.body
         else
@@ -100,9 +110,8 @@ module Rypper
         uri.next!
         break if uri.first?
       end
-      
+
       puts 'OK'
-      
       exit 0
     end
   end
